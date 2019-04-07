@@ -1,0 +1,12 @@
+{
+  "name": "savethepony",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": { },
+  "author": "Miguel Garrido",
+  "license": "ISC",
+  "dependencies": {
+    "node-fetch": "2.3.0"
+  }
+}
