@@ -83,8 +83,6 @@ module.exports = class Maze {
       return nextStepCoord && !nextStepCoord.equals(this.domokun)
         && !domokunPossibilities.find(cell => cell.equals(nextStepCoord))
     })
-    if (Constants.DEBUG)
-      console.debug('safe moves', safeMoves)
 
     // First we check if the pony can take the next optimal step safely
     const optimalMove = safeMoves.find(direction => {
@@ -93,8 +91,6 @@ module.exports = class Maze {
         && !nextStepCoord.equals(this.domokun)
         && !domokunPossibilities.find(cell => cell.equals(nextStepCoord))
     })
-    if (Constants.DEBUG)
-      console.debug('optimalMove', optimalMove)
     if (optimalMove)
       return optimalMove
 
@@ -105,8 +101,6 @@ module.exports = class Maze {
         && !nextStepCoord.equals(this.domokun)
         && !domokunPossibilities.find(cell => cell.equals(nextStepCoord))
     })
-    if (Constants.DEBUG)
-      console.debug('moveBack', moveBack)
     if (moveBack)
       return moveBack
 
