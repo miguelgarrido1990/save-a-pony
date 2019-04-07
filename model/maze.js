@@ -94,7 +94,8 @@ module.exports = class Maze {
     if (optimalMove)
       return optimalMove
 
-      // If it's not safe we take a step back
+    // If it's not safe we take a step back and erase the optimalPath in order to recalculate
+    this.optimalPath = [] 
     const moveBack = safeMoves.find(direction => {
       const nextStepCoord = this.getAdjacentCoordinates(this.pony, direction)
       return nextStepCoord && nextStepCoord.includedIn(this.pathTaken)

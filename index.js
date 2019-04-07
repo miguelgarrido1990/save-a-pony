@@ -6,7 +6,13 @@ const Maze = require('./model/maze')
 main()
 
 async function main() {
-  const mazeId = await APICalls.createMaze(15, 15, Constants.MY_LITTLE_PONY, 0)
+  const mazeId = await APICalls.createMaze(
+    Constants.DIMENSIONS.WIDTH, 
+    Constants.DIMENSIONS.HEIGHT, 
+    Constants.MY_LITTLE_PONY,
+    Constants.DIFFICULTY
+  )
+
   console.log('Maze ID:', mazeId)
   let mazeInfo = await APICalls.getMaze(mazeId)
   let maze = new Maze(mazeInfo)
