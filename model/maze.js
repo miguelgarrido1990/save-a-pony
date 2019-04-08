@@ -31,14 +31,7 @@ module.exports = class Maze {
     this.dataToCells(mazeInfo.data)
 
     this.pathTaken.push(this.pony)
-
-    // If the pony steped out of the correct path we recalculate
-    if (!this.pony.includedIn(this.correctPath))
-      this.findPath()
-    // If not we remove the current coordinates from the optimal path
-    else
-      this.correctPath = this.correctPath.filter(coordinates => !this.pony.equals(coordinates))
-
+    this.findPath()
     return this
   }
 
@@ -59,18 +52,6 @@ module.exports = class Maze {
       if (data[index].includes(Constants.WEST) && x > 0)
         this.cells[y][x - 1].push(Constants.EAST)
     }
-  }
-
-  ended() {
-    return this.isPonyDead() || this.isPonyOut()
-  }
-
-  isPonyOut() {
-    return this.pony.equals(this.exit)
-  }
-
-  isPonyDead() {
-    return this.pony.equals(this.domokun)
   }
   
   getNextMove() {
@@ -106,7 +87,15 @@ module.exports = class Maze {
       return moveBack
 
     // If there isn't way back either we'll take a random safe step
-    return safeMoves[Math.floor(Math.random() * safeMoves.length)]
+    const safeMove = safeMoves[Math.floor(Math.random() * safeMoves.length)]
+    if (safeMove)
+      return safeMove
+
+    // If there is no options left we take whatever we have
+    const possibleMoves = DIRECTIONS
+      .filter(direction => !!this.getAdjacentCoordinates(this.pony, direction))
+
+    return possibleMoves[Math.floor(Math.random() * possibleMoves.length)]
   }
 
   getAllAdjacentCoordinates(origin) {
@@ -157,14 +146,19 @@ module.exports = class Maze {
       }
     }
 
-    this.recursiveSolve(this.exit)
+    let foundFreePath = this.recursiveSolve(this.exit, true)
+    if (!foundFreePath)
+      this.recursiveSolve(this.exit, false)
   }
 
-  recursiveSolve(cell) {
+  recursiveSolve(cell, avoidDomokun) {
     if (cell.equals(this.pony)) 
       return true
+
+    if (avoidDomokun && cell.equals(this.domokun))
+      return false
       
-    if (this.wasHere[cell.y][cell.x]) 
+    if (this.wasHere[cell.y][cell.x])
       return false
       
     this.wasHere[cell.y][cell.x] = true

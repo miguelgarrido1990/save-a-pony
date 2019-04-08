@@ -17,21 +17,19 @@ async function main() {
   let mazeInfo = await APICalls.getMaze(mazeId)
   let maze = new Maze(mazeInfo)
 
+  let response
   do {
     let nextMove = maze.getNextMove()
-    await APICalls.makeAMove(mazeId, nextMove)
+    response = await APICalls.makeAMove(mazeId, nextMove)
     mazeInfo = await APICalls.getMaze(mazeId)
     maze = maze.update(mazeInfo)
 
     if (Constants.DEBUG)
       console.log(await APICalls.printMaze(mazeId))
 
-  } while (!maze.ended())
+  } while (response.state == 'active')
 
-  const message = maze.isPonyDead() ? 'The pony died =´(' : 
-    maze.isPonyOut() ? 'The pony made it out. YEAH!' : 
-    'Oops! Something went wrong'
-
-  console.log(message)
+  console.log(response['state-result'])
+  console.log(Constants.BASE_URL + response['hidden-url'])
   return
 }

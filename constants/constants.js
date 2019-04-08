@@ -1,13 +1,14 @@
 module.exports = {
   DEBUG: true,
 
-  BASE_URL: 'https://ponychallenge.trustpilot.com/pony-challenge/maze',
+  BASE_URL: 'https://ponychallenge.trustpilot.com',
+  MAZE_PATH: '/pony-challenge/maze',
   PRINT_PATH: 'print',
 
   MY_LITTLE_PONY: 'Fluttershy',
   DIMENSIONS: {
-    HEIGHT: 25,
-    WIDTH: 25
+    HEIGHT: 15,
+    WIDTH: 15
   },
   DIFFICULTY: 10,
 

@@ -8,6 +8,8 @@ const VALID_DIRECTIONS = [
   Constants.WEST
 ]
 
+const ENDPOINT = Constants.BASE_URL + Constants.MAZE_PATH
+
 module.exports.createMaze = async function (width, height, playerName, difficulty) {
   if (!validateDimensions(width, height)) {
       return new Error(`The width and height dimensions should not exceed the following constraints MIN=${Constants.DIMENSION_CONSTRAINTS.MIN} MAX=${Constants.DIMENSION_CONSTRAINTS.MAX}`)
@@ -32,21 +34,21 @@ module.exports.createMaze = async function (width, height, playerName, difficult
     body: JSON.stringify(reqBody) 
   }
 
-  let response = await fetch(Constants.BASE_URL, reqPayload)
+  let response = await fetch(ENDPOINT, reqPayload)
   let data = await response.json()
   
   return data ? data.maze_id : null
 }
 
 module.exports.getMaze = async function (mazeId) {
-  let response = await fetch(`${Constants.BASE_URL}/${mazeId}`)
+  let response = await fetch(`${ENDPOINT}/${mazeId}`)
   let data = await response.json()
   return data
 }
 
 module.exports.makeAMove = async function (mazeId, direction) {
   if (!validateDirection(direction)) {
-    return new Error(`The direction should be between the valid values: ${VALID_DIRECTIONS}`)
+    return {}
   }
 
   const reqPayload = { 
@@ -57,13 +59,16 @@ module.exports.makeAMove = async function (mazeId, direction) {
     body: JSON.stringify({ direction })
   }
 
-  let response = await fetch(`${Constants.BASE_URL}/${mazeId}`, reqPayload)
-  let data = await response.json()
-  return data
+  let response = await fetch(`${ENDPOINT}/${mazeId}`, reqPayload)
+  if (response.status == 200) {
+    let data = await response.json()
+    return data
+  }
+  return 
 }
 
 module.exports.printMaze = async function (mazeId) {
-  let response = await fetch(`${Constants.BASE_URL}/${mazeId}/${Constants.PRINT_PATH}`)
+  let response = await fetch(`${ENDPOINT}/${mazeId}/${Constants.PRINT_PATH}`)
   let data = await response.text()
   return data
 }
